@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="imgs\notepad.png" />
+    <None Remove="imgs\saved-icon.png" />
+    <None Remove="imgs\upload-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="imgs\notepad.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="imgs\saved-icon.png" />
+    <Resource Include="imgs\upload-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PIIIProject\PIIIProject.csproj" />
+  </ItemGroup>
+
+</Project>

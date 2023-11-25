@@ -1,0 +1,219 @@
+﻿<Window x:Class="CalendarApp.DateViewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CalendarApp"
+        mc:Ignorable="d" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Title="Date View" Height="560" Width="510"
+        Background="#e9e0c9">
+
+    <!--#region Color Palette-->
+    <Window.Resources>
+        <SolidColorBrush x:Key="Foreground">#42526E</SolidColorBrush>
+        <SolidColorBrush x:Key="Blue">#1A757D</SolidColorBrush>
+        <SolidColorBrush x:Key="Ming">#2F8289</SolidColorBrush>
+        <SolidColorBrush x:Key="SoftPink">#E1B8B1</SolidColorBrush>
+        <SolidColorBrush x:Key="Cinnabar">#E54B3F</SolidColorBrush>
+        <SolidColorBrush x:Key="RedCrayola">#FC5245</SolidColorBrush>
+        <SolidColorBrush x:Key="OutrageousOrange">#FC693F</SolidColorBrush>
+        <SolidColorBrush x:Key="OrangeCrayola">#FC743C</SolidColorBrush>
+        <SolidColorBrush x:Key="MangoTango">#FC7F39</SolidColorBrush>
+        <SolidColorBrush x:Key="DeepSaffron">#FC9633</SolidColorBrush>
+        <SolidColorBrush x:Key="YellowCrayola">#FCAC2D</SolidColorBrush>
+        <SolidColorBrush x:Key="Green">#7DAE33</SolidColorBrush>
+        <SolidColorBrush x:Key="Turqoise">#3FA051</SolidColorBrush>
+        <SolidColorBrush x:Key="GreenishTeal">#00916E</SolidColorBrush>
+        <SolidColorBrush x:Key="Seaweed">#0D8376</SolidColorBrush>
+        <SolidColorBrush x:Key="SoftWhite">#e9e0c9</SolidColorBrush>
+        <SolidColorBrush x:Key="UnharshWhite">#F7F2E7</SolidColorBrush>
+    </Window.Resources>
+    <!--#endregion-->
+
+    <Grid>
+        <GroupBox>
+            <StackPanel>
+                <!--Header Grid-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--Left Arrow Button-->
+                    <!--Code inspired by https://www.dotnetmirror.com/articles/wpf/112/wpf-circle-button-example-->
+                    <Grid Grid.Column="0" Margin="0, 0, 10, 0">
+                        <Button x:Name="btnLeftChangeDate" Click="btnLeftChangeDate_Click"
+                                Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid>
+                                        <Ellipse Fill="{StaticResource Blue}"/>
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <!--Polygon line taken from https://stackoverflow.com/questions/7874822/draw-solid-color-triangle-using-xaml-only-->
+                                        <Polygon Points="8,0, 0,5, 8,10" Fill="{StaticResource SoftWhite}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <!--Date-->
+                    <Label x:Name="lblDateTitle" Grid.Column="1" FontSize="25" FontWeight="DemiBold" HorizontalAlignment="Center" Padding="0,10,0,10" Margin="0, 15, 0, 15" Foreground="{StaticResource Blue}" FontFamily="MS Gothic"/>
+
+                    <!--Right Arrow Button-->
+                    <!--Code inspired by https://www.dotnetmirror.com/articles/wpf/112/wpf-circle-button-example-->
+                    <Grid Grid.Column="2" Margin="10, 0, 0, 0">
+                        <Button x:Name="btnRightChangeDate" Click="btnRightChangeDate_Click"
+                            Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid>
+                                        <Ellipse Fill="{StaticResource Blue}"/>
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <!--Polygon line taken from https://stackoverflow.com/questions/7874822/draw-solid-color-triangle-using-xaml-only-->
+                                        <Polygon Points="0,0 8,5, 0,10" Fill="{StaticResource SoftWhite}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Grid>
+
+                <!--Data Grid-->
+                <Grid Margin="20, 5, 20, 10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="0.1*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="20" Height="0.5*"/>
+                        <!--Tasks + Events Headers-->
+                        <RowDefinition MinHeight="150" Height="2*"/>
+                        <!--Tasks + Events ListBox-->
+                        <RowDefinition MinHeight="30" Height="0.6*"/>
+                        <!--Tasks + Events Buttons-->
+                        <RowDefinition MinHeight="20" Height="0,4*"/>
+                        <!--Space between Tasks & Events and Notes-->
+                        <RowDefinition MinHeight="20" Height="0.5*"/>
+                        <!--Notes Header-->
+                        <RowDefinition MinHeight="150" Height="1.9*"/>
+                        <!--Notes ListBox-->
+                        <RowDefinition MinHeight="30" Height="0.6*"/>
+                        <!--Notes Buttons-->
+                    </Grid.RowDefinitions>
+
+                    <!--#region Task-->
+                    <!--List-->
+                    <Rectangle Grid.Column="0" Grid.Row="0" Fill="{StaticResource SoftPink}"/>
+                    <Label Content="Scheduled Tasks" Grid.Column="0" Grid.Row="0" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           FontSize="15" FontFamily="Gill Sans MT" Padding="5, 3, 5, 5"/>
+
+                    <Rectangle Grid.Column="0"  Grid.Row="1" Fill="{StaticResource UnharshWhite}" Margin="0, 0, 0, 5"/>
+                    <ListBox x:Name="lbxTasks" Grid.Row="1" 
+                             HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="150" MinWidth="215" SelectionChanged="lbxTasks_SelectionChanged"
+                             DisplayMemberPath="Name">
+                    </ListBox>
+                    
+                    <!--Buttons-->
+                    <Grid Grid.Row="2" Margin="0, 5, 0, 0" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="btnAddTask" Content="Add" Click="btnAddTask_Click"
+                                Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                MinWidth="35" Width="65" MaxWidth="70" Height="25"
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource RedCrayola}"/>
+
+                        <Button x:Name="btnEditTask" Content="Edit" Click="btnEditTask_Click"
+                                MinWidth="35" Width="65" MaxWidth="70" Height="25"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource OrangeCrayola}"/>
+
+                        <Button x:Name="btnRemoveTask" Content="XXX" Click="btnRemoveTask_Click"
+                                MinWidth="35" Width="65" MaxWidth="70" Height="25"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="2" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource YellowCrayola}"/>
+                    </Grid>
+                    <!--#endregion-->
+
+                    <!--#region List-->
+                    <!--List-->
+                    <Rectangle Grid.Column="2" Grid.Row="0" Fill="{StaticResource SoftPink}"/>
+                    <Label Content="Events" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontFamily="Gill Sans MT" Padding="5, 3, 5, 5"/>
+
+                    <Rectangle Grid.Column="2"  Grid.Row="1" Fill="{StaticResource UnharshWhite}" Margin="0, 0, 0, 5"/>
+                    <ListBox x:Name="lbxEvents" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="150" MinWidth="215" Grid.Row="1" Width="218" SelectionChanged="lbxEvents_SelectionChanged"
+                             DisplayMemberPath="Name">
+                        
+                    </ListBox>
+
+                    <!--Buttons-->
+                    <Grid Grid.Row="2" Grid.Column="2" Margin="0, 5, 0, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="btnAddEvent" Content="Add" Click="btnAddEvent_Click"
+                                MinWidth="35" Width="65" MaxWidth="70" Height="25"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource Green}"/>
+
+                        <Button x:Name="btnEditEvent" Content="Edit" Click="btnEditEvent_Click"
+                                MinWidth="35" Width="65" MaxWidth="70" Height="25"
+                                Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource Turqoise}"/>
+
+                        <Button x:Name="btnRemoveEvent" Content="XXX" Click="btnRemoveEvent_Click"
+                                MinWidth="35" Width="65" MaxWidth="70" Height="25"
+                                Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource GreenishTeal}"/>
+                    </Grid>
+                    <!--#endregion-->
+
+                    <!--#region Notes-->
+                    <!--List-->
+                    <Rectangle Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Fill="{StaticResource SoftPink}"/>
+                    <Label Content="Task Notes" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontFamily="Gill Sans MT" Padding="5, 3, 5, 5"/>
+
+                    <Rectangle Grid.ColumnSpan="3" Grid.Row="5" Fill="{StaticResource UnharshWhite}" Margin="0, 0, 0, 10" />
+                    <ListBox x:Name="lbxNotes" Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="150" Width="460" SelectionChanged="lbxNotes_SelectionChanged"
+                             DisplayMemberPath="Name"></ListBox>
+
+                    <!--Buttons-->
+                    <Grid Grid.Row="6" Grid.ColumnSpan="3" Margin="0, 5, 0, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="btnAddNote" Content="Add" Click="btnAddNote_Click"
+                                MinWidth="35" Width="95" MaxWidth="100" Height="25"
+                                Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource Blue}"/>
+
+                        <Button x:Name="btnEditNote" Content="Edit" Click="btnEditNote_Click"
+                                MinWidth="35" Width="95" MaxWidth="100" Height="25"
+                                Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource Seaweed}"/>
+
+                        <Button x:Name="btnRemoveNote" Content="XXX" Click="btnRemoveNote_Click"
+                                MinWidth="35" Width="95" MaxWidth="100" Height="25"
+                                Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                FontFamily="Gill Sans MT" FontSize="13" Background="{StaticResource Ming}"/>
+                    </Grid>
+                    <!--#endregion-->
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>
